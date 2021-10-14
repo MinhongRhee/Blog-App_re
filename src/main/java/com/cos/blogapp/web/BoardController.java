@@ -39,19 +39,16 @@ public class BoardController {
 	private final HttpSession session;
 	
 	// 댓글작성
-	@PostMapping("/board/{boardId}/comment")
+	@PostMapping("/api/board/{boardId}/comment")
 	public String commentSave(@PathVariable int boardId, CommentSaveReqDto dto) {	
 		User principal = (User) session.getAttribute("principal");
-		if (principal == null) { // 로그인 안됨
-			throw new MyAsyncNotFoundException("인증이 되지 않았습니다.");
-		}
 		
 		commentService.댓글등록(boardId, dto, principal);
 		return "redirect:/board/"+boardId;
 	}
 	
 	// 글 수정
-	@PutMapping("/board/{id}")
+	@PutMapping("/api/board/{id}")
 	public @ResponseBody CMRespDto<String> update(@PathVariable int id, @Valid @RequestBody BoardSaveReqDto dto, BindingResult bindingResult) {
 		
 		// 유효성 검사
@@ -65,31 +62,24 @@ public class BoardController {
 		
 		// 인증
 		User principal = (User) session.getAttribute("principal");
-		if (principal == null) { // 로그인 안됨
-			throw new MyAsyncNotFoundException("인증이 되지 않았습니다.");
-		}
 		
 		boardService.게시글수정(id, principal, dto);
 		
 		return new CMRespDto<>(1,"업데이트 성공", null);
 	}
 	
-	@GetMapping("/board/{id}/updateForm")
+	@GetMapping("/api/board/{id}/updateForm")
 	public String boardUpdateForm(@PathVariable int id, Model model) {
 		model.addAttribute("boardEntity", boardService.게시글수정페이지이동(id));
 		return "board/updateForm";
 	}
 	
 	// API(AJAX) 요청
-	@DeleteMapping("/board/{id}")
+	@DeleteMapping("/api/board/{id}")
 	public @ResponseBody CMRespDto<String> deleteByID(@PathVariable int id) {
 
 		// 인증이 된 사람만 함수 접근 가능!! (로그인 된 사람)
 		User principal = (User) session.getAttribute("principal");
-
-		if (principal == null) { // 로그인 안됨
-			throw new MyAsyncNotFoundException("인증이 되지 않았습니다.");
-		}
 		
 		boardService.게시글삭제(id, principal);
 		return new CMRespDto<String>(1, "성공", null); // CMRespDto 는 object를 리턴 => JSON 형태
@@ -106,16 +96,11 @@ public class BoardController {
 		return "board/detail"; // ViewResolver 발동
 	}
 
-	@PostMapping("/board")
+	@PostMapping("/api/board")
 	public @ResponseBody String save(@Valid BoardSaveReqDto dto, BindingResult bindingResult) {
 		
 		// 공통 로직 시작 ---------------------------------------------
 		User principal = (User) session.getAttribute("principal");
-
-		// 인증 체크(공통로직)
-		if (principal == null) { // 로그인 안됨
-			return Script.href("/loginForm", "잘못된 접근입니다");
-		}
 
 		if (bindingResult.hasErrors()) {
 			Map<String, String> errorMap = new HashMap<>();

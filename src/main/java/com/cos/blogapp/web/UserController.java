@@ -34,13 +34,10 @@ public class UserController {
 	private final UserService userService;
 	private final HttpSession session;
 	
-	@PutMapping("/user/{id}")
+	@PutMapping("/api/user/{id}")
 	public @ResponseBody CMRespDto<String> update(@PathVariable int id, @Valid @RequestBody UserUpdateDto dto, BindingResult bindingResult) {
 		// 인증
 		User principal = (User) session.getAttribute("principal");
-		if (principal == null) { // 로그인 안됨
-			throw new MyAsyncNotFoundException("인증이 되지 않았습니다.");
-		}
 		
 		// 유효성 검사
 		if (bindingResult.hasErrors()) {
@@ -60,7 +57,7 @@ public class UserController {
 		return new CMRespDto<>(1, "성공", null);
 	}
 	
-	@GetMapping("/user/{id}")
+	@GetMapping("/api/user/{id}")
 	public String userinfo(@PathVariable int id) {
 		// 기본은 userRepository.findById(id) DB에서 가져와야 함.
 		// 편법은 세션값을 가져올 수 도 있다.

@@ -6,7 +6,7 @@
 <div class="container">
 	<!-- 내 글이면 (권한이 있으면) 수정과 삭제 버튼 보이게 if 사용가능 -->
 	<c:if test="${boardEntity.user.id eq sessionScope.principal.id}">
-		<a href="/board/${boardEntity.id}/updateForm" class="btn btn-warning">수정</a>
+		<a href="/api/board/${boardEntity.id}/updateForm" class="btn btn-warning">수정</a>
 		<button class="btn btn-danger" onclick="deleteById(${boardEntity.id})">삭제</button>
 	</c:if>
 
@@ -52,7 +52,7 @@
 
 	<div class="card">
 		<!-- 댓글 쓰기 시작 -->
-		<form action="/board/${boardEntity.id}/comment" method="post">
+		<form action="/api/board/${boardEntity.id}/comment" method="post">
 			<div class="card-body">
 				<textarea name="content" class="form-control" rows="1"
 					id="ta-content"></textarea>
@@ -94,9 +94,6 @@
 			</c:forEach>
 
 		</ul>
-
-		<div class="font-italic">작성자 : ${comment.user.username} &nbsp;</div>
-		<button class="badge" id="reply" onClick="deleteById(${comment.id})">삭제</button>
 
 	</div>
 	<br />

@@ -27,8 +27,8 @@ public class GlobalExceptionHandler {
 	
 	// fetch 요청 (데이터를 응답받아야 할 때)
 	@ExceptionHandler(value = MyAsyncNotFoundException.class)
-	public @ResponseBody CMRespDto error2(MyAsyncNotFoundException e) {
+	public CMRespDto<String> error2(MyAsyncNotFoundException e) {
 		System.out.println("오류 터졌어 : " + e.getMessage());
-		return new CMRespDto(-1, e.getMessage(), null);
+		return new CMRespDto<String>(-1, e.getMessage(), null);
 	}
 }
